@@ -8,9 +8,8 @@ I am a creative and detailed-oriented data scientist with experience conducting 
 
 ## Projects
 ### Machine Learning Translation
-My most recent project has involved the use of Gated Recurrent Units (GRU) to translate English input text to Spanish. To train the network, I utilized the EuroParl parallel corpus from NLTK, which contains text from speeches in the European Parliament dictated in every European language. For this project, I focused on the English and Spanish texts, training the model on over 1.5 million unique sentences from this corpus. The vocabulary of each language was restricted to the 30,000 most common words.
-
-The code for preprocessing the data and training the model can be found here and you can test out the model here!
+My most recent project has involved the use of Gated Recurrent Units (GRU) to translate English input text to Spanish. To train the network, I utilized the EuroParl parallel corpus from NLTK, which contains text from speeches in the European Parliament dictated in every European language. For this project, I focused on the English and Spanish texts, training the model on over 1.5 million unique sentences from this corpus. The vocabulary of each language was restricted to the 30,000 most common words. You can test out some translations here!
+The code for preprocessing the data and training the model can also be found here.
 
 ### Hyperparameter Tuning, Evaluating Performance and Intepreting LightGBM Models
 
