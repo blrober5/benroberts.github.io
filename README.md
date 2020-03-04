@@ -18,7 +18,9 @@ As part of our text analytics class, my team used a Kaggle dataset of described 
 
 ### Network Analysis: Examining Fake News Echo Chambers Across Political Facebook Groups
 During my time studying abroad in Helsinki, Finland, I took a class on Network Analysis using R. For my final project, I wanted to use this technique to explore how the profileration of fake news during the recent 2016 presidential election might have exacerabted echo chambers on social media. Using a Facebook API, I pulled shared news links from 14 distinct politcal Facebook groups, gathering information from 7 Liberal/Left-Leaning pages ('imwithhillary2016', 'OccupyDemocrats') and 7 Conservative/Right-Leaning pages ('DonaldTrump4President', 'conservativedaily'). Using these news links, I created a network with the political pages as the nodes and the number of shared links between pages as the weighted edges. This network of all shared news sources exhibited high connectivity between pages of all ideologies, showing no evidence for echo chambers amongst partisan Facebook pages in terms of general domains. However, I then created a network with only news domains determined by academic sources to be fake news. This network demonstrated much greater polarization, with two major clusters forming in the networ separating the distinct liberal and conversative communities. Thus, the analysis indicated that the sharing of fake news on partisan Facebook pages not only contributed to echo chambers within liberal and conservative communities on the social media site, it created echo chambers amongst communities where they ostensibly didn’t exist before. The network of political Facebook groups and fake news domains with clustered communities is shown below.
-[Rplot07.pdf](https://github.com/blrober5/benroberts.github.io/files/4284333/Rplot07.pdf)
+
+![Rplot07.pdf](https://github.com/blrober5/benroberts.github.io/files/4284333/Rplot07.pdf)
+
 The code for the network analysis can be found here and the research paper detailing the methodology and results can be found here.
 
 ### Case Study (Insurance/Consulting)
