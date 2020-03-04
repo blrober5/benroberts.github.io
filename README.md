@@ -22,7 +22,7 @@ During my time studying abroad in Helsinki, Finland, I took a class on Network A
 
 <img width="585" alt="Screen Shot 2020-03-03 at 7 33 24 PM" src="https://user-images.githubusercontent.com/54413992/75833088-ec9d8080-5d85-11ea-9d91-bbb7dc94918f.png">
 
-The code for the network analysis can be found [here](NetworkAnalysis.rmd] and the research paper detailing the methodology and results can be found here.
+The code for the network analysis can be found [here](NetworkAnalysis.rmd) and the research paper detailing the methodology and results can be found here.
 
 ### Case Study (Insurance/Consulting)
 
