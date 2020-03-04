@@ -1,0 +1,480 @@
+---
+title: "Network Analysis: Examining Fake News Echo Chambers Across Political Facebook Groups"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+### Installing Packages and Loading Libraries
+
+```{r}
+#install.packages("devtools")
+library(devtools)
+
+#install_github("pablobarbera/Rfacebook/Rfacebook")
+
+#install.packages("Rfacebook") 
+library(Rfacebook) # Facebook API
+```
+
+### Generating Token
+
+```{r}
+# token generated here: https://developers.facebook.com/tools/explorer 
+token <- 'EAACEdEose0cBAA1FI8RxsAEXIQJHv9ghrm2bpNBJsNSSAtXQGYL18L5dTBKI2CpSMU0Pg0CJvmhsmX6wclGee7fVELTMQclPNdGOhRNDfY9LfaWI3AAXBhJ1ZBd9aV65415b99WQTtRTIZBJAADzDZCV3BvJk51TfUSR0ZCAxooZCa4mb6IZCv9fitZANe9KCcZD'
+```
+
+### Extracting posted links from selected political Facebook pages
+
+```{r}
+###Conservative/Right-Leaning Pages
+TPPats <- getPage("teapartypatriots", token, n = 5000)
+#saveRDS(TPPats, "TPPats.RDS")
+#str(TPPats)
+#TPPats$link
+#TPPats$type
+
+Trump <- getPage("DonaldTrump4President", token, n = 5000)
+
+GOP <- getPage("GrandOldParty", token, n = 5000)
+
+ConservDaily <- getPage("conservativedaily", token, n=5000)
+
+EagleRising <- getPage("theEagleisRising", token, n=5000)
+
+FreeDaily <- getPage("freedomdailynews", token, n=5000)
+
+RightWing <- getPage("officialrightwingnews", token, n=5000)
+
+###Liberal/Left-Leaning Pages
+Hillary <- getPage("imwithhillary2016", token, n = 5000)
+
+DemSocialists <- getPage("USdems", token, n = 5000)
+
+CollegeDems<-getPage("collegedems", token, n = 5000)
+
+Bernie <- getPage("PeopleForBernie", token, n = 5000)
+
+BeingLiberal <- getPage("beingliberal.org", token, n = 5000)
+
+OccupyDems <- getPage("OccupyDemocrats", token, n=5000)
+
+Other98 <- getPage("theother98", token, n=5000)
+```
+
+### Shortening links to just domains
+
+```{r}
+#Function to extract link
+domain <-function(x)strsplit(gsub("http.//|https://|www\\.", "",x), "/")
+
+#Applying to Pages
+TPPatsdom <- domain(TPPats$link)
+TPPatsdom
+
+Hillarydom <- domain(Hillary$link)
+
+Trumpdom <- domain(Trump$link)
+
+DemSocialistsdom <- domain(DemSocialists$link)
+
+CollegeDemsdom <- domain(CollegeDems$link)
+
+GOPdom <- domain(GOP$link)
+
+Berniedom <- domain(Bernie$link)
+
+BeingLiberaldom <- domain(BeingLiberal$link)
+
+ConservDailydom <- domain(ConservDaily$link)
+
+EagleRisingdom <- domain(EagleRising$link)
+
+OccupyDemsdom<-domain(OccupyDems$link)
+
+FreeDailydom <- domain(FreeDaily$link)
+
+Other98dom <- domain(Other98$link)
+
+RightWingdom <- domain(RightWing$link)
+
+#
+TPPats$domain<-c()
+for (i in 1:length(TPPats$link)){
+  TPPats$domain[i]<-TPPatsdom[[c(i,1)]]
+}
+print(TPPats$domain)
+
+
+Hillary$domain<-c()
+for (i in 1:length(Hillary$link)){
+  Hillary$domain[i]<-Hillarydom[[c(i,1)]]
+}
+
+Trump$domain<-c()
+for (i in 1:length(Trump$link)){
+  Trump$domain[i]<-Trumpdom[[c(i,1)]]
+}
+
+DemSocialists$domain<-c()
+for (i in 1:length(DemSocialists$link)){
+  DemSocialists$domain[i]<-DemSocialistsdom[[c(i,1)]]
+}
+
+CollegeDems$domain<-c()
+for (i in 1:length(CollegeDems$link)){
+  CollegeDems$domain[i]<-CollegeDemsdom[[c(i,1)]]
+}
+
+GOP$domain<-c()
+for (i in 1:length(GOP$link)){
+  GOP$domain[i]<-GOPdom[[c(i,1)]]
+}
+
+Bernie$domain<-c()
+for (i in 1:length(Bernie$link)){
+  Bernie$domain[i]<-Berniedom[[c(i,1)]]
+}
+
+BeingLiberal$domain<-c()
+for (i in 1:length(BeingLiberal$link)){
+  BeingLiberal$domain[i]<-BeingLiberaldom[[c(i,1)]]
+}
+
+ConservDaily$domain<-c()
+for (i in 1:length(ConservDaily$link)){
+  ConservDaily$domain[i]<-ConservDailydom[[c(i,1)]]
+}
+
+EagleRising$domain<-c()
+for (i in 1:length(EagleRising$link)){
+  EagleRising$domain[i]<-EagleRisingdom[[c(i,1)]]
+}
+
+OccupyDems$domain<-c()
+for (i in 1:length(OccupyDems$link)){
+  OccupyDems$domain[i]<-OccupyDemsdom[[c(i,1)]]
+}
+
+FreeDaily$domain<-c()
+for (i in 1:length(FreeDaily$link)){
+  FreeDaily$domain[i]<-FreeDailydom[[c(i,1)]]
+}
+
+RightWing$domain<-c()
+for (i in 1:length(RightWing$link)){
+  RightWing$domain[i]<-RightWingdom[[c(i,1)]]
+}
+
+Other98$domain<-c()
+for (i in 1:length(Other98$link)){
+  Other98$domain[i]<-Other98dom[[c(i,1)]]
+}
+```
+
+### Removing facebook.com and youtube.com domains and forming matrices
+
+```{r}
+a1 <- table(TPPats$domain)
+a1 <- a1[!rownames(a1)=="facebook.com"]
+a1 <- a1[!rownames(a1)=="youtube.com"]
+#a1 <- a1[rownames(a1)%in%FakeNews$`100percentfedup.com`]
+b1 <- as.matrix(a1)
+colnames(b1) <- "TPPats"
+sum(b1)
+
+a3 <- table(Hillary$domain)
+a3 <- a3[!rownames(a3)=="facebook.com"]
+a3 <- a3[!rownames(a3)=="youtube.com"]
+#a3 <- a3[rownames(a3)%in%FakeNews$`100percentfedup.com`]
+b3 <- as.matrix(a3)
+colnames(b3) <- "Hillary"
+
+a4 <- table(Trump$domain)
+a4 <- a4[!rownames(a4)=="facebook.com"]
+#a4 <- a4[!rownames(a4)=="youtube.com"]
+#a4 <- a4[rownames(a4)%in%FakeNews$`100percentfedup.com`]
+b4 <- as.matrix(a4)
+colnames(b4) <- "Trump"
+
+a5 <- table(DemSocialists$domain)
+a5 <- a5[!rownames(a5)=="facebook.com"]
+a5 <- a5[!rownames(a5)=="youtube.com"]
+#a5 <- a5[rownames(a5)%in%FakeNews$`100percentfedup.com`]
+b5 <- as.matrix(a5)
+colnames(b5) <- "DemSocialists"
+
+a6 <- table(CollegeDems$domain)
+a6 <- a6[!rownames(a6)=="facebook.com"]
+a6 <- a6[!rownames(a6)=="youtube.com"]
+#a6 <- a6[rownames(a6)%in%FakeNews$`100percentfedup.com`]
+b6 <- as.matrix(a6)
+colnames(b6) <- "CollegeDems"
+
+a7 <- table(GOP$domain)
+a7 <- a7[!rownames(a7)=="facebook.com"]
+a7 <- a7[!rownames(a7)=="youtube.com"]
+#a7 <- a7[rownames(a7)%in%FakeNews$`100percentfedup.com`]
+b7 <- as.matrix(a7)
+colnames(b7) <- "GOP"
+
+a8 <- table(Bernie$domain)
+a8 <- a8[!rownames(a8)=="facebook.com"]
+a8 <- a8[!rownames(a8)=="youtube.com"]
+#a8 <- a8[rownames(a8)%in%FakeNews$`100percentfedup.com`]
+b8 <- as.matrix(a8)
+colnames(b8) <- "Bernie"
+
+a9 <- table(BeingLiberal$domain)
+a9 <- a9[!rownames(a9)=="facebook.com"]
+a8 <- a9[!rownames(a9)=="youtube.com"]
+#a9 <- a9[rownames(a9)%in%FakeNews$`100percentfedup.com`]
+b9 <- as.matrix(a9)
+colnames(b9) <- "BeingLiberal"
+
+a11 <- table(ConservDaily$domain)
+a11 <- a11[!rownames(a11)=="facebook.com"]
+a11 <- a11[!rownames(a11)=="youtube.com"]
+#a11 <- a11[rownames(a11)%in%FakeNews$`100percentfedup.com`]
+b11 <- as.matrix(a11)
+colnames(b11) <- "ConservDaily"
+
+a12 <- table(EagleRising$domain)
+a12 <- a12[!rownames(a12)=="facebook.com"]
+a12 <- a12[!rownames(a12)=="youtube.com"]
+#a12 <- a12[rownames(a12)%in%FakeNews$`100percentfedup.com`]
+b12 <- as.matrix(a12)
+colnames(b12) <- "EagleRising"
+
+a13 <- table(OccupyDems$domain)
+a13 <- a13[!rownames(a13)=="facebook.com"]
+a13 <- a13[!rownames(a13)=="youtube.com"]
+#a13 <- a13[rownames(a13)%in%FakeNews$`100percentfedup.com`]
+b13 <- as.matrix(a13)
+colnames(b13) <- "OccupyDems"
+
+a14 <- table(FreeDaily$domain)
+a14 <- a14[!rownames(a14)=="facebook.com"]
+a14 <- a14[!rownames(a14)=="youtube.com"]
+#a14 <- a14[rownames(a14)%in%FakeNews$`100percentfedup.com`]
+b14 <- as.matrix(a14)
+colnames(b14) <- "FreeDaily"
+
+a16 <- table(Other98$domain)
+a16 <- a16[!rownames(a16)=="facebook.com"]
+a16 <- a16[!rownames(a16)=="youtube.com"]
+#a16 <- a16[rownames(a16)%in%FakeNews$`100percentfedup.com`]
+b16 <- as.matrix(a16)
+colnames(b16) <- "Other98"
+
+a17 <- table(RightWing$domain)
+a17 <- a17[!rownames(a17)=="facebook.com"]
+a17 <- a17[!rownames(a17)=="youtube.com"]
+#a17 <- a17[rownames(a17)%in%FakeNews$`100percentfedup.com`]
+b17 <- as.matrix(a17)
+colnames(b17) <- "RightWing"
+
+```
+
+### Removing non-fakenews domains
+
+```{r}
+a1 <- table(TPPats$domain)
+a1 <- a1[!rownames(a1)=="facebook.com"]
+a1 <- a1[!rownames(a1)=="youtube.com"]
+a1 <- a1[rownames(a1)%in%FakeNews$`X__1`]
+b1 <- as.matrix(a1)
+colnames(b1) <- "TPPats"
+sum(b1)
+
+a3 <- table(Hillary$domain)
+a3 <- a3[!rownames(a3)=="facebook.com"]
+a3 <- a3[!rownames(a3)=="youtube.com"]
+a3 <- a3[rownames(a3)%in%FakeNews$`X__1`]
+b3 <- as.matrix(a3)
+colnames(b3) <- "Hillary"
+
+a4 <- table(Trump$domain)
+a4 <- a4[!rownames(a4)=="facebook.com"]
+a4 <- a4[!rownames(a4)=="youtube.com"]
+a4 <- a4[rownames(a4)%in%FakeNews$`X__1`]
+b4 <- as.matrix(a4)
+colnames(b4) <- "Trump"
+
+a5 <- table(DemSocialists$domain)
+a5 <- a5[!rownames(a5)=="facebook.com"]
+a5 <- a5[!rownames(a5)=="youtube.com"]
+a5 <- a5[rownames(a5)%in%FakeNews$`X__1`]
+b5 <- as.matrix(a5)
+colnames(b5) <- "DemSocialists"
+
+a6 <- table(CollegeDems$domain)
+a6 <- a6[!rownames(a6)=="facebook.com"]
+a6 <- a6[!rownames(a6)=="youtube.com"]
+a6 <- a6[rownames(a6)%in%FakeNews$`X__1`]
+b6 <- as.matrix(a6)
+colnames(b6) <- "CollegeDems"
+
+a7 <- table(GOP$domain)
+a7 <- a7[!rownames(a7)=="facebook.com"]
+a7 <- a7[!rownames(a7)=="youtube.com"]
+a7 <- a7[rownames(a7)%in%FakeNews$`X__1`]
+b7 <- as.matrix(a7)
+colnames(b7) <- "GOP"
+
+a8 <- table(Bernie$domain)
+a8 <- a8[!rownames(a8)=="facebook.com"]
+a8 <- a8[!rownames(a8)=="youtube.com"]
+a8 <- a8[rownames(a8)%in%FakeNews$`X__1`]
+b8 <- as.matrix(a8)
+colnames(b8) <- "Bernie"
+
+a9 <- table(BeingLiberal$domain)
+a9 <- a9[!rownames(a9)=="facebook.com"]
+a8 <- a9[!rownames(a9)=="youtube.com"]
+a9 <- a9[rownames(a9)%in%FakeNews$`X__1`]
+b9 <- as.matrix(a9)
+colnames(b9) <- "BeingLiberal"
+
+a11 <- table(ConservDaily$domain)
+a11 <- a11[!rownames(a11)=="facebook.com"]
+a11 <- a11[!rownames(a11)=="youtube.com"]
+a11 <- a11[rownames(a11)%in%FakeNews$`X__1`]
+b11 <- as.matrix(a11)
+colnames(b11) <- "ConservDaily"
+
+a12 <- table(EagleRising$domain)
+a12 <- a12[!rownames(a12)=="facebook.com"]
+a12 <- a12[!rownames(a12)=="youtube.com"]
+a12 <- a12[rownames(a12)%in%FakeNews$`X__1`]
+b12 <- as.matrix(a12)
+colnames(b12) <- "EagleRising"
+
+a13 <- table(OccupyDems$domain)
+a13 <- a13[!rownames(a13)=="facebook.com"]
+a13 <- a13[!rownames(a13)=="youtube.com"]
+a13 <- a13[rownames(a13)%in%FakeNews$`X__1`]
+b13 <- as.matrix(a13)
+colnames(b13) <- "OccupyDems"
+
+a14 <- table(FreeDaily$domain)
+a14 <- a14[!rownames(a14)=="facebook.com"]
+a14 <- a14[!rownames(a14)=="youtube.com"]
+a14 <- a14[rownames(a14)%in%FakeNews$`X__1`]
+b14 <- as.matrix(a14)
+colnames(b14) <- "FreeDaily"
+
+a16 <- table(Other98$domain)
+a16 <- a16[!rownames(a16)=="facebook.com"]
+a16 <- a16[!rownames(a16)=="youtube.com"]
+a16 <- a16[rownames(a16)%in%FakeNews$`X__1`]
+b16 <- as.matrix(a16)
+colnames(b16) <- "Other98"
+
+a17 <- table(RightWing$domain)
+a17 <- a17[!rownames(a17)=="facebook.com"]
+a17 <- a17[!rownames(a17)=="youtube.com"]
+a17 <- a17[rownames(a17)%in%FakeNews$`X__1`]
+b17 <- as.matrix(a17)
+colnames(b17) <- "RightWing"
+```
+
+### Make each page it's own network
+
+```{r}
+library(igraph)
+c1 <- graph_from_incidence_matrix(b1, weighted = T)
+c1
+
+c3 <- graph_from_incidence_matrix(b3, weighted=T)
+c3
+c4 <- graph_from_incidence_matrix(b4, weighted=T)
+c5 <- graph_from_incidence_matrix(b5, weighted=T)
+c6 <- graph_from_incidence_matrix(b6, weighted=T)
+c7 <- graph_from_incidence_matrix(b7, weighted=T)
+c8 <- graph_from_incidence_matrix(b8, weighted=T)
+c9 <- graph_from_incidence_matrix(b9, weighted=T)
+
+c11 <- graph_from_incidence_matrix(b11, weighted=T)
+c12 <- graph_from_incidence_matrix(b12, weighted=T)
+c13 <- graph_from_incidence_matrix(b13, weighted=T)
+c14 <- graph_from_incidence_matrix(b14, weighted=T)
+c16 <- graph_from_incidence_matrix(b16, weighted=T)
+c17 <- graph_from_incidence_matrix(b17, weighted=T)
+```
+
+### Combine all
+# d1 is now a network of both pages and linked sites
+
+```{r}
+d1 <- union(c1, c3, c4, c5, c6, c7, c8, c9, c11, c12, c13, c14, c16, c17)
+
+plot(d1, vertex.size = V(d1)$deg, vertex.label = NA, edge.width = E(d1)$weight)
+E(d1)
+```
+
+### Mark whether each  node is a page or linked site
+
+```{r}
+V(d1)$type <- bipartite.mapping(d1)$type
+V(d1)$type
+```
+
+### Make network of pages (Pages as Nodes, Shared Links as Edges)
+
+```{r}
+e1 <- bipartite.projection(d1)$proj2
+E(e1)$weight
+
+vertex_attr( e1, 'deg' ) <- degree( e1 , mode = 'total' )
+
+vertex_attr(e1, 'domain') <- sapply(strsplit(V(e1)$name , "\\." ), 'tail', 1 )
+```
+
+### Examining Network
+
+```{r}
+table(e1$weight)
+E(e1)$weight
+```
+
+### Labeling Nodes (Pages) as Either Republican (Conservative) or Democrat (Liberal)
+
+```{r}
+V(e1)$party <- c("republican", "democrat", "republican", "democrat", "democrat", "republican", "democrat", "democrat", "republican", "republican", "democrat", "republican", "democrat", "republican")
+
+# Marking Conservative Nodes as Red and Liberal Nodes as Blue
+E(e1)$color <- c("red", "red", "purple", "purple", "purple", "purple", "blue", "blue", "blue", "blue", "blue", "blue", "blue", "blue", "blue", "blue", "blue", "blue", "blue", "red", "purple", "red", "red", "purple", "blue", "blue", "blue", "blue", "red", "red", "red", "red", "blue", "red")
+
+# Visualizing Network
+plot(e1, layout=layout_with_kk, vertex.size = V(e1)$deg, vertex.label = (V(e1)$domain), vertex.label.color="black", edge.arrow.mode = '-', vertex.color=c( "red", "blue")[1+(V(e1)$party=="democrat")], edge.width=(E(e1)$weight)*1.5, edge.color=E(e1)$color) 
+```
+
+### Density and centralization measures for the network
+
+```{r}
+graph.density(e1)
+
+centralization.betweenness(e1)$centralization
+
+centralization.degree(e1)$centralization
+
+centralization.closeness(e1)$centralization
+```
+
+### Clustering Network (Political Groups) based on Shared Links (Weighted Edges)
+
+```{r}
+#clustering
+com <- edge.betweenness.community(e1)
+V(e1)$memb <- com$membership
+modularity(com)
+com <- edge.betweenness.community(e1)
+
+plot(com, e1)
+
+plot( com1, e3, vertex.size = V(e3)$deg, vertex.label = (V(e3)$domain), vertex.label.color="black", edge.arrow.mode = '-', vertex.color=c( "red", "blue")[1+(V(e3)$party=="democrat")], edge.width=log(E(e3)$weight)*2, edge.color=E(e3)$color) 
+```
+
