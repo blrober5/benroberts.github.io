@@ -1,8 +1,9 @@
-# Welcome to my Data Science Portfolio         
-![LinkedIN_Headshot](https://user-images.githubusercontent.com/54413992/75832915-7ac53700-5d85-11ea-8dc6-6de95da07ac4.jpg)
+# Welcome to my Data Science Portfolio  
 ## Benjamin Roberts
+![LinkedIN_Headshot](https://user-images.githubusercontent.com/54413992/75832915-7ac53700-5d85-11ea-8dc6-6de95da07ac4.jpg)
 - blrober5@ncsu.edu
-- Institute for Advanced Analytics                        
+- Institute for Advanced Analytics
+- B.A. Economics; B.A. Political Science
 
 ## About Me
 I am a creative and detailed-oriented data scientist with experience conducting end-to-end, value-added analyses on large, complex datasets. My passion for data comes from my undergraduate studies in Economics and Political Science, where I focused my research on the quantitative relationship between policies and economic outcomes. For my honors thesis, I utilized various statistical modeling techniques to examine the causal relationship between state-level reproductive policies and female labor supply. I am currently completing my MS in Analytics at the Institute for Advanced Analytics (IAA) at North Carolina State University and will graduate in May. During my studies at the IAA, my practicum team has served as consultants to Trillium Health Resources, one of North Carolina's largest Medicaid Managed Care Organizations. Over these 8 months, we have led the Prediction as a Path to Prevention project to identify Medicaid members at high-risk for suicide or self-harm incidents.
