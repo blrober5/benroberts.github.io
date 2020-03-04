@@ -1,5 +1,5 @@
 # Welcome to my Data Science Portfolio         
-                                              ![LinkedIN_Headshot](https://user-images.githubusercontent.com/54413992/75832915-7ac53700-5d85-11ea-8dc6-6de95da07ac4.jpg)
+![LinkedIN_Headshot](https://user-images.githubusercontent.com/54413992/75832915-7ac53700-5d85-11ea-8dc6-6de95da07ac4.jpg)
 ## Benjamin Roberts
 - blrober5@ncsu.edu
 - Institute for Advanced Analytics                        
