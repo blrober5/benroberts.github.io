@@ -32,5 +32,5 @@ However, I then created a network with only news domains determined by academic 
 The code for the network analysis in R can be found [here](NetworkAnalysis.Rmd). Full details on the methodology and results are provided in my [research paper](FinalPaper_NetworkAnalysis_BenjaminRoberts.pdf).
 
 ### Additional Projects
--[Tic-Tac-Toe in Python](Assignment2_TicTacToe.md)
--[Predicting Net Rate of Bike Renting in SF Bay Area](CaseStudy_Consulting.md)
+- [Tic-Tac-Toe in Python](Assignment2_TicTacToe.md)
+- [Predicting Net Rate of Bike Renting in SF Bay Area](CaseStudy_Consulting.md)
