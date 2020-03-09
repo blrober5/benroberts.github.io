@@ -33,3 +33,4 @@ The code for the network analysis in R can be found [here](NetworkAnalysis.Rmd).
 
 ### Additional Projects
 -[Tic-Tac-Toe in Python](Assignment2_TicTacToe.md)
+-[Predicting Net Rate of Bike Renting in SF Bay Area](CaseStudy_Consulting.md)
