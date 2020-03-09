@@ -30,3 +30,6 @@ However, I then created a network with only news domains determined by academic 
 <img width="585" alt="Screen Shot 2020-03-03 at 7 33 24 PM" src="https://user-images.githubusercontent.com/54413992/75833088-ec9d8080-5d85-11ea-9d91-bbb7dc94918f.png">
 
 The code for the network analysis in R can be found [here](NetworkAnalysis.Rmd). Full details on the methodology and results are provided in my [research paper](FinalPaper_NetworkAnalysis_BenjaminRoberts.pdf).
+
+### Additional Projects
+-[Tic-Tac-Toe in Python]()
